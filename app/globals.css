@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* surfaces & ink — light (dataviz reference chrome) */
+  --surface: 249 249 247; /* page plane #f9f9f7 */
+  --surface-raised: 252 252 251; /* card surface #fcfcfb */
+  --surface-sunken: 240 239 236; /* #f0efec */
+  --ink: 11 11 11; /* #0b0b0b */
+  --ink-secondary: 82 81 78; /* #52514e */
+  --ink-muted: 137 135 129; /* #898781 */
+  --line: 225 224 217; /* #e1e0d9 */
+  --accent: 42 120 214; /* blue #2a78d6 */
+  --accent-soft: 205 226 251; /* blue-100 #cde2fb */
+  --success: 12 163 12; /* #0ca30c */
+  --warning: 237 161 0; /* #eda100 */
+  --danger: 208 59 59; /* #d03b3b */
+  --violet: 74 58 167; /* #4a3aa7 */
+  --aqua: 27 175 122; /* #1baf7a */
+
+  /* chart series tokens (validated palette, light) */
+  --series-1: #2a78d6;
+  --series-2: #1baf7a;
+  --series-3: #eda100;
+  --series-4: #008300;
+  --series-5: #4a3aa7;
+  --series-6: #e34948;
+  --chart-grid: #e1e0d9;
+  --chart-axis: #c3c2b7;
+  --chart-muted: #898781;
+}
+
+.dark {
+  --surface: 13 13 13; /* #0d0d0d */
+  --surface-raised: 26 26 25; /* #1a1a19 */
+  --surface-sunken: 22 22 21;
+  --ink: 255 255 255;
+  --ink-secondary: 195 194 183; /* #c3c2b7 */
+  --ink-muted: 137 135 129;
+  --line: 44 44 42; /* #2c2c2a */
+  --accent: 57 135 229; /* #3987e5 */
+  --accent-soft: 16 66 129; /* blue-650 */
+  --success: 12 163 12;
+  --warning: 250 178 25;
+  --danger: 230 103 103;
+  --violet: 144 133 233; /* #9085e9 */
+  --aqua: 25 158 112; /* #199e70 */
+
+  --series-1: #3987e5;
+  --series-2: #199e70;
+  --series-3: #c98500;
+  --series-4: #008300;
+  --series-5: #9085e9;
+  --series-6: #e66767;
+  --chart-grid: #2c2c2a;
+  --chart-axis: #383835;
+  --chart-muted: #898781;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-surface text-ink antialiased;
+  font-feature-settings: "cv02", "cv03";
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.25);
+}
+
+/* Consistent, visible keyboard focus everywhere */
+:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Balanced headings, tidy prose */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
+
+/* Reduced motion is not optional */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* thin, unobtrusive scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--ink-muted) / 0.35) transparent;
+}
+
+/* flashcard 3-D flip */
+.perspective-1000 {
+  perspective: 1200px;
+}
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+}
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* formula text renders sub/sup nicely */
+.formula {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+}
