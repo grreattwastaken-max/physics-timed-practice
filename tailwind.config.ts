@@ -33,18 +33,23 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
+          "Schibsted Grotesk Variable",
           "system-ui",
           "-apple-system",
           "Segoe UI",
-          "Roboto",
-          "Helvetica Neue",
           "sans-serif",
+        ],
+        mono: [
+          "Spline Sans Mono Variable",
+          "ui-monospace",
+          "SFMono-Regular",
+          "monospace",
         ],
       },
       boxShadow: {
-        card: "0 1px 2px rgba(11,11,11,0.04), 0 4px 16px rgba(11,11,11,0.06)",
-        "card-hover":
-          "0 2px 4px rgba(11,11,11,0.06), 0 8px 28px rgba(11,11,11,0.10)",
+        /* crisp, tight elevation — never border + wide soft shadow together */
+        card: "0 1px 2px rgba(11,11,20,0.05)",
+        "card-hover": "0 2px 8px rgba(11,11,20,0.09)",
       },
       keyframes: {
         shimmer: {

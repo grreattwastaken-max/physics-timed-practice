@@ -1,7 +1,7 @@
 "use client";
 
-import { ReactNode, ButtonHTMLAttributes } from "react";
-import { motion } from "framer-motion";
+import { ReactNode, ButtonHTMLAttributes, useEffect, useRef, useState } from "react";
+import { motion, animate, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
@@ -70,18 +70,18 @@ export function Button({
 }) {
   const styles: Record<ButtonVariant, string> = {
     primary:
-      "bg-accent text-white hover:opacity-90 shadow-sm disabled:opacity-40",
+      "bg-accent text-white hover:brightness-110 disabled:opacity-40",
     secondary:
-      "bg-surface-sunken text-ink border border-line hover:bg-line/50 disabled:opacity-40",
+      "bg-surface-raised text-ink border border-line hover:border-ink-muted/50 disabled:opacity-40",
     ghost: "text-ink-secondary hover:bg-surface-sunken disabled:opacity-40",
-    danger: "bg-danger text-white hover:opacity-90 disabled:opacity-40",
-    success: "bg-success text-white hover:opacity-90 disabled:opacity-40",
+    danger: "bg-danger text-white hover:brightness-110 disabled:opacity-40",
+    success: "bg-success text-white hover:brightness-110 disabled:opacity-40",
   };
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium",
-        "transition-all duration-150 active:scale-[0.98] disabled:cursor-not-allowed",
+        "inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold",
+        "transition-all duration-150 ease-out-expo hover:-translate-y-px active:translate-y-0 active:scale-[0.985] disabled:cursor-not-allowed disabled:hover:translate-y-0",
         styles[variant],
         className
       )}
@@ -89,6 +89,109 @@ export function Button({
     >
       {children}
     </button>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+/** Animated circular progress — conveys level/score state at a glance. */
+export function ProgressRing({
+  value, // 0-1
+  size = 56,
+  stroke = 5,
+  tone = "accent",
+  children,
+}: {
+  value: number;
+  size?: number;
+  stroke?: number;
+  tone?: "accent" | "success" | "warning" | "danger";
+  children?: ReactNode;
+}) {
+  const reduce = useReducedMotion();
+  const r = (size - stroke) / 2;
+  const c = 2 * Math.PI * r;
+  const clamped = Math.max(0, Math.min(1, value));
+  const tones = {
+    accent: "stroke-accent",
+    success: "stroke-success",
+    warning: "stroke-warning",
+    danger: "stroke-danger",
+  };
+  return (
+    <div
+      className="relative inline-flex items-center justify-center"
+      style={{ width: size, height: size }}
+      role="img"
+      aria-label={`${Math.round(clamped * 100)}%`}
+    >
+      <svg width={size} height={size} className="-rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          strokeWidth={stroke}
+          className="stroke-surface-sunken"
+        />
+        <motion.circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          strokeWidth={stroke}
+          strokeLinecap="round"
+          strokeDasharray={c}
+          initial={{ strokeDashoffset: c }}
+          animate={{ strokeDashoffset: c * (1 - clamped) }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : { duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }
+          }
+          className={tones[tone]}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/** Number that counts up to its value on mount — state arriving, not decoration. */
+export function CountUp({
+  value,
+  className,
+  duration = 0.8,
+}: {
+  value: number;
+  className?: string;
+  duration?: number;
+}) {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    if (reduce || value === 0) {
+      setDone(true);
+      return;
+    }
+    const controls = animate(0, value, {
+      duration,
+      ease: [0.16, 1, 0.3, 1],
+      onUpdate: (v) => {
+        if (ref.current) ref.current.textContent = Math.round(v).toString();
+      },
+      onComplete: () => setDone(true),
+    });
+    return () => controls.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+  return (
+    <span ref={ref} className={cn("tabular-nums", className)}>
+      {done || value === 0 ? value : 0}
+    </span>
   );
 }
 

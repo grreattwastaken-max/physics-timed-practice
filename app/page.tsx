@@ -18,8 +18,10 @@ import {
   AnimatedCard,
   Badge,
   Card,
+  CountUp,
   PageHeader,
   ProgressBar,
+  ProgressRing,
   SectionHeading,
 } from "@/components/ui";
 import { ChapterIcon } from "@/components/chapter-icon";
@@ -144,61 +146,75 @@ export default function DashboardPage() {
 
       {/* Stat row */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <AnimatedCard className="p-5" delay={0}>
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-ink-secondary">Level</p>
-            <Badge tone="accent">{titleForLevel(level)}</Badge>
-          </div>
-          <p className="mt-1 text-3xl font-bold tabular-nums">{level}</p>
-          <div className="mt-2">
-            <ProgressBar value={progress} />
-            <p className="mt-1 text-xs text-ink-muted">
-              {intoLevel}/{needed} XP to level {level + 1}
+        <AnimatedCard className="flex items-center gap-4 p-5" delay={0}>
+          <ProgressRing value={progress} size={62} stroke={5}>
+            <span className="text-lg font-bold tabular-nums">{level}</span>
+          </ProgressRing>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold">
+              {titleForLevel(level)}
+            </p>
+            <p className="mt-0.5 text-xs text-ink-muted">
+              <span className="formula">{xp}</span> XP ·{" "}
+              <span className="formula">{needed - intoLevel}</span> to Lv{" "}
+              {level + 1}
             </p>
           </div>
         </AnimatedCard>
-        <AnimatedCard className="p-5" delay={0.05}>
+        <AnimatedCard className="p-5" delay={0.04}>
           <div className="flex items-center justify-between">
             <p className="text-sm text-ink-secondary">Streak</p>
             <Flame
               className={
-                streak > 0 ? "h-4 w-4 text-warning" : "h-4 w-4 text-ink-muted"
+                streak > 0
+                  ? "h-4 w-4 fill-warning/30 text-warning"
+                  : "h-4 w-4 text-ink-muted"
               }
             />
           </div>
-          <p className="mt-1 text-3xl font-bold tabular-nums">
-            {streak}
+          <p className="mt-1 text-3xl font-bold">
+            <CountUp value={streak} />
             <span className="text-base font-medium text-ink-muted"> days</span>
           </p>
           <p className="mt-2 text-xs text-ink-muted">
-            Best: {bestStreak} days. One session a day keeps it alive.
+            {streak > 0
+              ? `Best: ${bestStreak}. One session a day keeps it alive.`
+              : "Any session today starts a new streak."}
           </p>
         </AnimatedCard>
-        <AnimatedCard className="p-5" delay={0.1}>
+        <AnimatedCard className="p-5" delay={0.08}>
           <p className="text-sm text-ink-secondary">Questions answered</p>
-          <p className="mt-1 text-3xl font-bold tabular-nums">{quizAnswered}</p>
+          <p className="mt-1 text-3xl font-bold">
+            <CountUp value={quizAnswered} />
+          </p>
           <p className="mt-2 text-xs text-ink-muted">
-            {quizAnswered > 0
-              ? `${overallAccuracy}% overall accuracy`
-              : "Start a quiz to build your profile"}
+            {quizAnswered > 0 ? (
+              <>
+                <span className="formula">{overallAccuracy}%</span> overall
+                accuracy
+              </>
+            ) : (
+              "Start a quiz to build your profile"
+            )}
           </p>
         </AnimatedCard>
-        <AnimatedCard className="p-5" delay={0.15}>
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-ink-secondary">Achievements</p>
-            <Trophy className="h-4 w-4 text-warning" />
-          </div>
-          <p className="mt-1 text-3xl font-bold tabular-nums">
-            {achievements.length}
-            <span className="text-base font-medium text-ink-muted">
-              /{ACHIEVEMENTS.length}
-            </span>
-          </p>
-          <div className="mt-2">
-            <ProgressBar
-              value={achievements.length / ACHIEVEMENTS.length}
-              tone="warning"
-            />
+        <AnimatedCard className="flex items-center gap-4 p-5" delay={0.12}>
+          <ProgressRing
+            value={achievements.length / ACHIEVEMENTS.length}
+            size={62}
+            stroke={5}
+            tone="warning"
+          >
+            <Trophy className="h-5 w-5 text-warning" />
+          </ProgressRing>
+          <div>
+            <p className="text-sm font-semibold">Achievements</p>
+            <p className="mt-0.5 text-xl font-bold tabular-nums">
+              {achievements.length}
+              <span className="text-sm font-medium text-ink-muted">
+                /{ACHIEVEMENTS.length}
+              </span>
+            </p>
           </div>
         </AnimatedCard>
       </div>

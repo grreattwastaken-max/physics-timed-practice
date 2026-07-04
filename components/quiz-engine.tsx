@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { QuizQuestion } from "@/lib/types";
 import { useProgress } from "@/lib/store";
-import { Badge, Button, Card, ProgressBar } from "./ui";
+import { Badge, Button, Card, ProgressBar, ProgressRing } from "./ui";
 import { cn, formatDuration } from "@/lib/utils";
 
 export interface QuizConfig {
@@ -145,24 +145,27 @@ export function QuizEngine({
           <p className="text-sm font-medium uppercase tracking-wide text-ink-muted">
             Session complete
           </p>
-          <p className="mt-2 text-5xl font-bold tabular-nums">
-            {score}
-            <span className="text-2xl text-ink-muted">/{total}</span>
-          </p>
-          <p className="mt-1 text-sm text-ink-secondary">
+          <div className="mt-4 flex justify-center">
+            <ProgressRing
+              value={total ? score / total : 0}
+              size={116}
+              stroke={9}
+              tone={pct >= 80 ? "success" : pct >= 55 ? "accent" : "warning"}
+            >
+              <span>
+                <span className="text-3xl font-bold tabular-nums">{score}</span>
+                <span className="text-lg text-ink-muted">/{total}</span>
+              </span>
+            </ProgressRing>
+          </div>
+          <p className="mt-4 text-sm text-ink-secondary">
             {pct >= 80
               ? "Excellent — this is exam-ready accuracy."
               : pct >= 55
                 ? "Solid. Review the explanations you missed, then go again."
                 : "Good effort — the fastest gains come from re-attempting what you missed."}
           </p>
-          <div className="mt-4">
-            <ProgressBar
-              value={total ? score / total : 0}
-              tone={pct >= 80 ? "success" : pct >= 55 ? "accent" : "warning"}
-            />
-          </div>
-          <div className="mt-3 text-xs text-ink-muted">
+          <div className="formula mt-3 text-xs text-ink-muted">
             Time: {formatDuration(elapsed)}
             {config.mode === "timed" && timeLimit > 0 && (
               <> of {formatDuration(timeLimit)}</>
