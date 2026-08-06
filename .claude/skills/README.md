@@ -17,36 +17,37 @@ The four `impeccable-*` subagents that ship with impeccable live in
 
 ## From [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill)
 
-All 13, MIT (`LICENSE-taste-skill.txt`), installed via
+MIT (`LICENSE-taste-skill.txt`), installed via
 `npx skills add ... -a claude-code --copy`. Tracked in `/skills-lock.json`;
 update with `npx skills update`. Each is a single `SKILL.md` with no scripts.
-
-**Write code:**
 
 | Skill | What it's for |
 | --- | --- |
 | `design-taste-frontend` | The headline one, v2. Infers the brief, tunes VARIANCE / MOTION / DENSITY, GSAP skeletons, redesign-audit protocol |
-| `design-taste-frontend-v1` | v1, kept only for exact back-compat. Redundant here — remove unless something depends on it |
-| `gpt-taste` | Stricter variant tuned for GPT/Codex, not Claude |
 | `redesign-existing-projects` | Audit-first pass over an existing UI |
 | `high-end-visual-design` | Calm, expensive, soft-contrast direction |
 | `minimalist-ui` | Editorial / Linear-ish restraint |
 | `industrial-brutalist-ui` | Swiss type, hard contrast, experimental |
-| `image-to-code` | Generate design images first, then build to match. Written for Codex |
-| `full-output-enforcement` | Not a design skill — bans placeholder/truncated output |
-| `stitch-design-taste` | Emits a `DESIGN.md` for Google Stitch |
 
-**Generate images only, no code:** `imagegen-frontend-web`,
-`imagegen-frontend-mobile`, `brandkit`. These need an image-generation tool
-to be useful.
+The repo ships 13. The other 8 were installed, then removed as a poor fit
+for this project — restore any of them with
+`npx skills add https://github.com/Leonxlnx/taste-skill --skill "<name>" -a claude-code --copy`:
+
+- `design-taste-frontend-v1` — v1 back-compat only; nothing here depends on it
+- `gpt-taste`, `image-to-code` — written for GPT/Codex, not Claude
+- `imagegen-frontend-web`, `imagegen-frontend-mobile`, `brandkit` — emit
+  reference images, never code, and need an image-generation tool
+- `stitch-design-taste` — targets Google Stitch; this is Next.js + Tailwind
+- `full-output-enforcement` — not a design skill, and its "any task
+  requiring exhaustive output" trigger competes with everything
 
 ## Picking one
 
-There are now 16 skills here and most of them describe themselves as
-"make the frontend not look AI-generated." Their trigger descriptions
-overlap heavily, so **name the skill you want** — `/impeccable polish`,
-"use hallmark to redesign the hero", "use minimalist-ui for this" — rather
-than relying on automatic selection.
+Eight skills remain and most describe themselves as "make the frontend not
+look AI-generated." Their trigger descriptions still overlap, so **name the
+skill you want** — `/impeccable polish`, "use hallmark to redesign the
+hero", "use minimalist-ui for this" — rather than relying on automatic
+selection.
 
 Rough division of labour:
 
